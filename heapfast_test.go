@@ -3,17 +3,17 @@ package main
 import "testing"
 
 func TestAddItem(t *testing.T) {
-	i := Item{0, nil}
+	i := Record{0, 0}
 	h := Heap{}
 	h.AddItem(i)
 }
 
 func TestPopItem(t *testing.T) {
-	i := Item{0, nil}
+	i := Record{0, 0}
 	h := Heap{}
 	h.AddItem(i)
 	r := h.PopItem()
-	if i.key != r.key {
+	if i[0] != r[0] {
 		t.Error(i, r)
 	}
 }
@@ -44,25 +44,25 @@ func TestParent(t *testing.T) {
 }
 
 func TestHeapifyOneNode(t *testing.T) {
-	arr := []Item{{10, nil}, {12, nil}, {22, nil}}
+	arr := []Record{{10, 0}, {12, 0}, {22, 0}}
 	h := Heap{arr, 1}
 	h.heapify(0)
-	if h.items[0].key != 10 {
+	if h.items[0][0] != 10 {
 		t.Error(h)
 	}
 }
 
 func TestHeapifyThreeNode(t *testing.T) {
-	arr := []Item{{10, nil}, {12, nil}, {22, nil}}
+	arr := []Record{{10, 0}, {12, 0}, {22, 0}}
 	h := Heap{arr, 3}
 	h.heapify(0)
-	if h.items[0].key != 22 {
+	if h.items[0][0] != 22 {
 		t.Error(h)
 	}
-	if h.items[1].key != 12 {
+	if h.items[1][0] != 12 {
 		t.Error(h)
 	}
-	if h.items[2].key != 10 {
+	if h.items[2][0] != 10 {
 		t.Error(h)
 	}
 }

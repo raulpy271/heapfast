@@ -4,13 +4,10 @@ import (
 	"math"
 )
 
-type Item struct {
-	key   float64
-	value any
-}
+type Record [2]uint
 
 type Heap struct {
-	items  [2]Item
+	items  []Record
 	length uint
 }
 
@@ -33,12 +30,12 @@ func (h *Heap) heapify(i uint) {
 	for i < h.length {
 		l = left(i)
 		r = right(i)
-		if l < h.length && h.items[i].key < h.items[l].key {
+		if l < h.length && h.items[i][0] < h.items[l][0] {
 			largest = l
 		} else {
 			largest = i
 		}
-		if r < h.length && h.items[largest].key < h.items[r].key {
+		if r < h.length && h.items[largest][0] < h.items[r][0] {
 			largest = r
 		}
 		if i == largest {
@@ -51,11 +48,11 @@ func (h *Heap) heapify(i uint) {
 
 }
 
-func (h *Heap) AddItem(i Item) {
+func (h *Heap) AddItem(i Record) {
 	h.items = append(h.items, i)
 }
 
-func (h *Heap) PopItem() Item {
+func (h *Heap) PopItem() Record {
 	i := h.items[0]
 	h.items = h.items[1:]
 	return i
