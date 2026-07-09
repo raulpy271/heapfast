@@ -44,7 +44,7 @@ func TestParent(t *testing.T) {
 }
 
 func TestHeapifyOneNode(t *testing.T) {
-	arr := []Record{{10, 0}, {12, 0}, {22, 0}}
+	arr := []Record{{10}, {12}, {22}}
 	h := Heap{arr, 1}
 	h.heapify(0)
 	if h.items[0][0] != 10 {
@@ -53,7 +53,7 @@ func TestHeapifyOneNode(t *testing.T) {
 }
 
 func TestHeapifyThreeNode(t *testing.T) {
-	arr := []Record{{10, 0}, {12, 0}, {22, 0}}
+	arr := []Record{{10}, {12}, {22}}
 	h := Heap{arr, 3}
 	h.heapify(0)
 	if h.items[0][0] != 22 {
@@ -64,5 +64,17 @@ func TestHeapifyThreeNode(t *testing.T) {
 	}
 	if h.items[2][0] != 10 {
 		t.Error(h)
+	}
+}
+
+func TestHeapifySixNode(t *testing.T) {
+	arr := []Record{{4}, {14}, {7}, {2}, {8}, {1}}
+	result := []uint{14, 8, 7, 2, 4, 1}
+	h := Heap{arr, 6}
+	h.heapify(0)
+	for i := range 6 {
+		if h.items[i][0] != result[i] {
+			t.Error(h)
+		}
 	}
 }

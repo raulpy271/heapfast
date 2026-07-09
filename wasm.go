@@ -23,7 +23,7 @@ func NewHeap(this js.Value, args []js.Value) any {
 }
 
 func main() {
-	heaps := make([]Heap, 0, 20);
+	heaps := make([]Heap, 0, 20)
 	js.Global().Set("NewHeap", js.FuncOf(func(this js.Value, args []js.Value) any {
 		h := Heap{}
 		heaps = append(heaps, h)
@@ -33,7 +33,7 @@ func main() {
 		heapref["add"] = js.FuncOf(func(this js.Value, args []js.Value) any {
 			v := this.Get("pos").Int()
 			h := &heaps[v]
-			h.AddItem(Item{key: args[0].Float(), value: args[1]})
+			h.AddItem(Record{uint(args[0].Int()), uint(args[1].Int())})
 			return nil
 		})
 		heapref["addBulk"] = js.FuncOf(func(this js.Value, args []js.Value) any {
@@ -46,7 +46,7 @@ func main() {
 			values := args[1]
 			l := keys.Length()
 			for i := 0; i < l; i++ {
-				h.AddItem(Item{keys.Index(i).Float(), values.Index(i)})
+				h.AddItem(Record{uint(keys.Index(i).Int()), uint(values.Index(i).Int())})
 			}
 			return nil
 		})
@@ -54,10 +54,7 @@ func main() {
 			v := this.Get("pos").Int()
 			h := &heaps[v]
 			i := h.PopItem()
-			r := make([]any, 2)
-			r[0] = js.ValueOf(i.key)
-			r[1] = js.ValueOf(i.value)
-			return r
+			return []any{i[0], i[1]}
 		})
 		return heapref
 	}))
