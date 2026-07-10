@@ -86,6 +86,37 @@ func TestPopItem(t *testing.T) {
 	if i[0] != r[0] {
 		t.Error(i, r)
 	}
+	if h.length != 0 {
+		t.Error(h)
+	}
+	if len(h.items) != 1 {
+		t.Error(h)
+	}
+}
+
+func TestPopThree(t *testing.T) {
+	h := BuildMaxHeap([]Record{{7}, {9}, {10}, {8}, {5}, {11}})
+	result := []uint{8, 5, 7}
+	if h.PopItem()[0] != 11 {
+		t.Error(h)
+	}
+	if h.PopItem()[0] != 10 {
+		t.Error(h)
+	}
+	if h.PopItem()[0] != 9 {
+		t.Error(h)
+	}
+	if h.length != 3 {
+		t.Error(h)
+	}
+	if len(h.items) != 6 {
+		t.Error(h)
+	}
+	for i := range 3 {
+		if h.items[i][0] != result[i] {
+			t.Error(h)
+		}
+	}
 }
 
 func TestLeft(t *testing.T) {

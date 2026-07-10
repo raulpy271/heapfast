@@ -75,8 +75,14 @@ func (h *Heap) AddItem(record Record) {
 	}
 }
 
+func (h Heap) Max() Record {
+	return h.items[0]
+}
+
 func (h *Heap) PopItem() Record {
 	i := h.items[0]
-	h.items = h.items[1:]
+	h.items[0] = h.items[h.length-1]
+	h.length--
+	h.heapify(0)
 	return i
 }
