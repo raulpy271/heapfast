@@ -45,11 +45,34 @@ func (h *Heap) heapify(i uint) {
 			i = largest
 		}
 	}
-
 }
 
-func (h *Heap) AddItem(i Record) {
-	h.items = append(h.items, i)
+func BuildMaxHeap(records []Record) *Heap {
+	heap := &Heap{records, uint(len(records))}
+	i := int(math.Floor((float64(len(records)) / 2) - 1))
+	for ; i >= 0; i-- {
+		heap.heapify(uint(i))
+	}
+	return heap
+}
+
+func SortMax(records []Record) []Record {
+	heap := BuildMaxHeap(records)
+	return heap.items
+}
+
+func (h *Heap) AddItem(record Record) {
+	if int(h.length) == len(h.items) {
+		h.items = append(h.items, record)
+	} else {
+		h.items[h.length] = record
+	}
+	i := h.length
+	h.length++
+	for i > 0 && h.items[parent(i)][0] < h.items[i][0] {
+		h.items[i], h.items[parent(i)] = h.items[parent(i)], h.items[i]
+		i = parent(i)
+	}
 }
 
 func (h *Heap) PopItem() Record {

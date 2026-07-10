@@ -2,10 +2,80 @@ package main
 
 import "testing"
 
-func TestAddItem(t *testing.T) {
-	i := Record{0, 0}
+func TestAddItemEmptyHeap(t *testing.T) {
+	i := Record{10, 20}
 	h := Heap{}
 	h.AddItem(i)
+	if h.length != 1 {
+		t.Error(h)
+	}
+	if len(h.items) != 1 {
+		t.Error(h)
+	}
+	if h.items[0] != i {
+		t.Error(h)
+	}
+}
+
+func TestAddItemEmptyHeapWithTrash(t *testing.T) {
+	i := Record{10, 20}
+	h := Heap{make([]Record, 5), 0}
+	h.AddItem(i)
+	if h.length != 1 {
+		t.Error(h)
+	}
+	if len(h.items) != 5 {
+		t.Error(h)
+	}
+	if h.items[0] != i {
+		t.Error(h)
+	}
+	for j := 1; j < 5; j++ {
+		if h.items[j][0] != 0 {
+			t.Error(h)
+		}
+	}
+}
+
+func TestAddThreeItems(t *testing.T) {
+	h := Heap{make([]Record, 5), 0}
+	result := []uint{3, 1, 2, 0, 0}
+	h.AddItem(Record{1})
+	h.AddItem(Record{2})
+	h.AddItem(Record{3})
+	if h.length != 3 {
+		t.Error(h)
+	}
+	if len(h.items) != 5 {
+		t.Error(h)
+	}
+	for j := range 5 {
+		if h.items[j][0] != result[j] {
+			t.Error(h)
+		}
+	}
+}
+
+func TestAddSixItems(t *testing.T) {
+	h := Heap{make([]Record, 5), 0}
+	result := []uint{11, 8, 10, 7, 5, 9}
+	h.AddItem(Record{7})
+	h.AddItem(Record{9})
+	h.AddItem(Record{10})
+	h.AddItem(Record{8})
+	h.AddItem(Record{5})
+	h.AddItem(Record{11})
+	if h.length != 6 {
+		t.Error(h)
+	}
+	if len(h.items) != 6 {
+		t.Error(h)
+	}
+	for j := range 6 {
+		if h.items[j][0] != result[j] {
+			t.Error(h)
+		}
+	}
 }
 
 func TestPopItem(t *testing.T) {
@@ -73,6 +143,17 @@ func TestHeapifySixNode(t *testing.T) {
 	h := Heap{arr, 6}
 	h.heapify(0)
 	for i := range 6 {
+		if h.items[i][0] != result[i] {
+			t.Error(h)
+		}
+	}
+}
+
+func TestBuildMaxHeap(t *testing.T) {
+	arr := []Record{{4}, {1}, {3}, {2}, {16}, {9}, {10}, {14}, {8}, {7}}
+	result := []uint{16, 14, 10, 8, 7, 9, 3, 2, 4, 1}
+	h := BuildMaxHeap(arr)
+	for i := range len(result) {
 		if h.items[i][0] != result[i] {
 			t.Error(h)
 		}
