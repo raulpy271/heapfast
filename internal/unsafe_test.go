@@ -1,9 +1,10 @@
-package heapfast
+package internal
 
 import (
 	"encoding/binary"
 	"testing"
 	"unsafe"
+	"github.com/raulpy271/heapfast/heapfast"
 )
 
 func TestCastRecords(t *testing.T) {
