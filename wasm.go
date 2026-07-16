@@ -2,6 +2,7 @@
 
 package main
 
+import "github.com/raulpy271/heapfast/pkg"
 import "syscall/js"
 
 func mean(this js.Value, args []js.Value) any {
@@ -18,14 +19,14 @@ func mean(this js.Value, args []js.Value) any {
 }
 
 func NewHeap(this js.Value, args []js.Value) any {
-	h := Heap{}
+	h := heapfast.Heap{}
 	return js.ValueOf(h)
 }
 
 func main() {
-	heaps := make([]Heap, 0, 20)
+	heaps := make([]heapfast.Heap, 0, 20)
 	js.Global().Set("NewHeap", js.FuncOf(func(this js.Value, args []js.Value) any {
-		h := Heap{}
+		h := heapfast.Heap{}
 		heaps = append(heaps, h)
 		pos := len(heaps) - 1
 		heapref := make(map[string]any)
@@ -33,7 +34,7 @@ func main() {
 		heapref["add"] = js.FuncOf(func(this js.Value, args []js.Value) any {
 			v := this.Get("pos").Int()
 			h := &heaps[v]
-			h.AddItem(Record{uint64(args[0].Int()), uint64(args[1].Int())})
+			h.AddItem(heapfast.Record{uint64(args[0].Int()), uint64(args[1].Int())})
 			return nil
 		})
 		heapref["addBulk"] = js.FuncOf(func(this js.Value, args []js.Value) any {
@@ -46,7 +47,7 @@ func main() {
 			values := args[1]
 			l := keys.Length()
 			for i := range l {
-				h.AddItem(Record{uint64(keys.Index(i).Int()), uint64(values.Index(i).Int())})
+				h.AddItem(heapfast.Record{uint64(keys.Index(i).Int()), uint64(values.Index(i).Int())})
 			}
 			return nil
 		})
@@ -57,6 +58,13 @@ func main() {
 			return []any{i[0], i[1]}
 		})
 		return heapref
+	}))
+	js.Global().Set("Heapsort", js.FuncOf(func(this js.Value, args []js.Value) any {
+		if !args[0].InstanceOf(js.Global().Get("Array")) {
+			panic("The first parameter should be an array")
+		}
+		//js.CopyBytesToGo()
+		return nil
 	}))
 	select {}
 }
