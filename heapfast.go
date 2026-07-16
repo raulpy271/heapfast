@@ -4,7 +4,7 @@ import (
 	"math"
 )
 
-type Record [2]uint
+type Record [2]uint64
 
 type Heap struct {
 	items  []Record

@@ -11,7 +11,7 @@ func mean(this js.Value, args []js.Value) any {
 	arr := args[0]
 	n := arr.Length()
 	sum := 0.0
-	for i := 0; i < n; i++ {
+	for i := range n {
 		sum += arr.Index(i).Float()
 	}
 	return js.ValueOf(sum / float64(n))
@@ -33,7 +33,7 @@ func main() {
 		heapref["add"] = js.FuncOf(func(this js.Value, args []js.Value) any {
 			v := this.Get("pos").Int()
 			h := &heaps[v]
-			h.AddItem(Record{uint(args[0].Int()), uint(args[1].Int())})
+			h.AddItem(Record{uint64(args[0].Int()), uint64(args[1].Int())})
 			return nil
 		})
 		heapref["addBulk"] = js.FuncOf(func(this js.Value, args []js.Value) any {
@@ -45,8 +45,8 @@ func main() {
 			keys := args[0]
 			values := args[1]
 			l := keys.Length()
-			for i := 0; i < l; i++ {
-				h.AddItem(Record{uint(keys.Index(i).Int()), uint(values.Index(i).Int())})
+			for i := range l {
+				h.AddItem(Record{uint64(keys.Index(i).Int()), uint64(values.Index(i).Int())})
 			}
 			return nil
 		})
