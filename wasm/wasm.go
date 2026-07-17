@@ -2,7 +2,7 @@
 
 package main
 
-import "github.com/raulpy271/heapfast/pkg"
+import "github.com/raulpy271/heapfast/heapfast"
 import "syscall/js"
 
 func mean(this js.Value, args []js.Value) any {
