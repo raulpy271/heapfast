@@ -2,8 +2,12 @@
 
 package main
 
-import "github.com/raulpy271/heapfast/heapfast"
-import "syscall/js"
+import (
+	"syscall/js"
+
+	"github.com/raulpy271/heapfast/heapfast"
+	"github.com/raulpy271/heapfast/internal"
+)
 
 func mean(this js.Value, args []js.Value) any {
 	if len(args) == 0 || args[0].Length() == 0 {
@@ -60,11 +64,16 @@ func main() {
 		return heapref
 	}))
 	js.Global().Set("Heapsort", js.FuncOf(func(this js.Value, args []js.Value) any {
-		if !args[0].InstanceOf(js.Global().Get("Array")) {
+		if !args[0].InstanceOf(js.Global().Get("Uint8Array")) {
 			panic("The first parameter should be an array")
 		}
-		//js.CopyBytesToGo()
-		return nil
+		dst := make([]byte, args[0].Length())
+		js.CopyBytesToGo(dst, args[0])
+		records := internal.CastRecordsFromBytes(dst)
+		heapfast.SortMax(records)
+		dst = internal.CastRecordsToBytes(records)
+		js.CopyBytesToJS(args[0], dst)
+		return len(records)
 	}))
 	select {}
 }
