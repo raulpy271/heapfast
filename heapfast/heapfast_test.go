@@ -6,13 +6,13 @@ func TestAddItemEmptyHeap(t *testing.T) {
 	i := Record{10, 20}
 	h := Heap{}
 	h.AddItem(i)
-	if h.length != 1 {
+	if h.Length != 1 {
 		t.Error(h)
 	}
-	if len(h.items) != 1 {
+	if len(h.Records) != 1 {
 		t.Error(h)
 	}
-	if h.items[0] != i {
+	if h.Records[0] != i {
 		t.Error(h)
 	}
 }
@@ -21,42 +21,42 @@ func TestAddItemEmptyHeapWithTrash(t *testing.T) {
 	i := Record{10, 20}
 	h := Heap{make([]Record, 5), 0}
 	h.AddItem(i)
-	if h.length != 1 {
+	if h.Length != 1 {
 		t.Error(h)
 	}
-	if len(h.items) != 5 {
+	if len(h.Records) != 5 {
 		t.Error(h)
 	}
-	if h.items[0] != i {
+	if h.Records[0] != i {
 		t.Error(h)
 	}
 	for j := 1; j < 5; j++ {
-		if h.items[j][0] != 0 {
+		if h.Records[j][0] != 0 {
 			t.Error(h)
 		}
 	}
 }
 
-func TestAddThreeItems(t *testing.T) {
+func TestAddThreeRecords(t *testing.T) {
 	h := Heap{make([]Record, 5), 0}
 	result := []uint64{3, 1, 2, 0, 0}
 	h.AddItem(Record{1})
 	h.AddItem(Record{2})
 	h.AddItem(Record{3})
-	if h.length != 3 {
+	if h.Length != 3 {
 		t.Error(h)
 	}
-	if len(h.items) != 5 {
+	if len(h.Records) != 5 {
 		t.Error(h)
 	}
 	for j := range 5 {
-		if h.items[j][0] != result[j] {
+		if h.Records[j][0] != result[j] {
 			t.Error(h)
 		}
 	}
 }
 
-func TestAddSixItems(t *testing.T) {
+func TestAddSixRecords(t *testing.T) {
 	h := Heap{make([]Record, 5), 0}
 	result := []uint64{11, 8, 10, 7, 5, 9}
 	h.AddItem(Record{7})
@@ -65,14 +65,14 @@ func TestAddSixItems(t *testing.T) {
 	h.AddItem(Record{8})
 	h.AddItem(Record{5})
 	h.AddItem(Record{11})
-	if h.length != 6 {
+	if h.Length != 6 {
 		t.Error(h)
 	}
-	if len(h.items) != 6 {
+	if len(h.Records) != 6 {
 		t.Error(h)
 	}
 	for j := range 6 {
-		if h.items[j][0] != result[j] {
+		if h.Records[j][0] != result[j] {
 			t.Error(h)
 		}
 	}
@@ -86,10 +86,10 @@ func TestPopItem(t *testing.T) {
 	if i[0] != r[0] {
 		t.Error(i, r)
 	}
-	if h.length != 0 {
+	if h.Length != 0 {
 		t.Error(h)
 	}
-	if len(h.items) != 1 {
+	if len(h.Records) != 1 {
 		t.Error(h)
 	}
 }
@@ -106,14 +106,14 @@ func TestPopThree(t *testing.T) {
 	if h.PopItem()[0] != 9 {
 		t.Error(h)
 	}
-	if h.length != 3 {
+	if h.Length != 3 {
 		t.Error(h)
 	}
-	if len(h.items) != 6 {
+	if len(h.Records) != 6 {
 		t.Error(h)
 	}
 	for i := range 3 {
-		if h.items[i][0] != result[i] {
+		if h.Records[i][0] != result[i] {
 			t.Error(h)
 		}
 	}
@@ -148,7 +148,7 @@ func TestHeapifyOneNode(t *testing.T) {
 	arr := []Record{{10}, {12}, {22}}
 	h := Heap{arr, 1}
 	h.heapify(0)
-	if h.items[0][0] != 10 {
+	if h.Records[0][0] != 10 {
 		t.Error(h)
 	}
 }
@@ -157,13 +157,13 @@ func TestHeapifyThreeNode(t *testing.T) {
 	arr := []Record{{10}, {12}, {22}}
 	h := Heap{arr, 3}
 	h.heapify(0)
-	if h.items[0][0] != 22 {
+	if h.Records[0][0] != 22 {
 		t.Error(h)
 	}
-	if h.items[1][0] != 12 {
+	if h.Records[1][0] != 12 {
 		t.Error(h)
 	}
-	if h.items[2][0] != 10 {
+	if h.Records[2][0] != 10 {
 		t.Error(h)
 	}
 }
@@ -174,7 +174,7 @@ func TestHeapifySixNode(t *testing.T) {
 	h := Heap{arr, 6}
 	h.heapify(0)
 	for i := range 6 {
-		if h.items[i][0] != result[i] {
+		if h.Records[i][0] != result[i] {
 			t.Error(h)
 		}
 	}
@@ -185,7 +185,7 @@ func TestBuildMaxHeap(t *testing.T) {
 	result := []uint64{16, 14, 10, 8, 7, 9, 3, 2, 4, 1}
 	h := BuildMaxHeap(arr)
 	for i := range len(result) {
-		if h.items[i][0] != result[i] {
+		if h.Records[i][0] != result[i] {
 			t.Error(h)
 		}
 	}

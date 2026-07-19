@@ -7,8 +7,8 @@ import (
 type Record [2]uint64
 
 type Heap struct {
-	items  []Record
-	length uint
+	Records  []Record
+	Length uint
 }
 
 func left(i uint) uint {
@@ -27,21 +27,21 @@ func parent(i uint) uint {
 
 func (h *Heap) heapify(i uint) {
 	var l, r, largest uint
-	for i < h.length {
+	for i < h.Length {
 		l = left(i)
 		r = right(i)
-		if l < h.length && h.items[i][0] < h.items[l][0] {
+		if l < h.Length && h.Records[i][0] < h.Records[l][0] {
 			largest = l
 		} else {
 			largest = i
 		}
-		if r < h.length && h.items[largest][0] < h.items[r][0] {
+		if r < h.Length && h.Records[largest][0] < h.Records[r][0] {
 			largest = r
 		}
 		if i == largest {
 			break
 		} else {
-			h.items[i], h.items[largest] = h.items[largest], h.items[i]
+			h.Records[i], h.Records[largest] = h.Records[largest], h.Records[i]
 			i = largest
 		}
 	}
@@ -58,31 +58,31 @@ func BuildMaxHeap(records []Record) *Heap {
 
 func SortMax(records []Record) []Record {
 	heap := BuildMaxHeap(records)
-	return heap.items
+	return heap.Records
 }
 
 func (h *Heap) AddItem(record Record) {
-	if int(h.length) == len(h.items) {
-		h.items = append(h.items, record)
+	if int(h.Length) == len(h.Records) {
+		h.Records = append(h.Records, record)
 	} else {
-		h.items[h.length] = record
+		h.Records[h.Length] = record
 	}
-	i := h.length
-	h.length++
-	for i > 0 && h.items[parent(i)][0] < h.items[i][0] {
-		h.items[i], h.items[parent(i)] = h.items[parent(i)], h.items[i]
+	i := h.Length
+	h.Length++
+	for i > 0 && h.Records[parent(i)][0] < h.Records[i][0] {
+		h.Records[i], h.Records[parent(i)] = h.Records[parent(i)], h.Records[i]
 		i = parent(i)
 	}
 }
 
 func (h Heap) Max() Record {
-	return h.items[0]
+	return h.Records[0]
 }
 
 func (h *Heap) PopItem() Record {
-	i := h.items[0]
-	h.items[0] = h.items[h.length-1]
-	h.length--
+	i := h.Records[0]
+	h.Records[0] = h.Records[h.Length-1]
+	h.Length--
 	h.heapify(0)
 	return i
 }
