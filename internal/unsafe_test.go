@@ -8,10 +8,10 @@ import (
 )
 
 func TestCastRecordsFromBytes(t *testing.T) {
-	recs := [3]heapfast.Record{{10, 20}, {11, 21}, {12, 22}}
+	recs := [3]heapfast.Record[uint64]{{10, 20}, {11, 21}, {12, 22}}
 	raw := make([]byte, 0, int(unsafe.Sizeof(recs[0]))*len(recs))
 	raw, _ = binary.Append(raw, binary.NativeEndian, recs)
-	result := CastRecordsFromBytes(raw)
+	result := CastRecordsFromBytes[uint64](raw)
 	for i, rec := range recs {
 		if rec != result[i] {
 			t.Error(recs, result)
@@ -20,7 +20,7 @@ func TestCastRecordsFromBytes(t *testing.T) {
 }
 
 func TestCastRecordsToBytes(t *testing.T) {
-	recs := [3]heapfast.Record{{10, 20}, {11, 21}, {12, 22}}
+	recs := [3]heapfast.Record[uint64]{{10, 20}, {11, 21}, {12, 22}}
 	raw := make([]byte, 0, int(unsafe.Sizeof(recs[0]))*len(recs))
 	raw, _ = binary.Append(raw, binary.NativeEndian, recs)
 	result := CastRecordsToBytes(recs[:])
