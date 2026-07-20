@@ -4,7 +4,7 @@ import "testing"
 
 func TestAddItemEmptyHeap(t *testing.T) {
 	i := Record[uint]{10, 20}
-	h := Heap[uint]{}
+	h := HeapMax[uint]{}
 	h.AddItem(i)
 	if h.Length != 1 {
 		t.Error(h)
@@ -19,7 +19,7 @@ func TestAddItemEmptyHeap(t *testing.T) {
 
 func TestAddItemEmptyHeapWithTrash(t *testing.T) {
 	i := Record[uint]{10, 20}
-	h := Heap[uint]{make([]Record[uint], 5), 0}
+	h := HeapMax[uint]{make([]Record[uint], 5), 0}
 	h.AddItem(i)
 	if h.Length != 1 {
 		t.Error(h)
@@ -38,7 +38,7 @@ func TestAddItemEmptyHeapWithTrash(t *testing.T) {
 }
 
 func TestAddThreeRecords(t *testing.T) {
-	h := Heap[uint]{make([]Record[uint], 5), 0}
+	h := HeapMax[uint]{make([]Record[uint], 5), 0}
 	result := []uint{3, 1, 2, 0, 0}
 	h.AddItem(Record[uint]{1})
 	h.AddItem(Record[uint]{2})
@@ -57,7 +57,7 @@ func TestAddThreeRecords(t *testing.T) {
 }
 
 func TestAddSixRecords(t *testing.T) {
-	h := Heap[uint]{make([]Record[uint], 5), 0}
+	h := HeapMax[uint]{make([]Record[uint], 5), 0}
 	result := []uint{11, 8, 10, 7, 5, 9}
 	h.AddItem(Record[uint]{7})
 	h.AddItem(Record[uint]{9})
@@ -80,7 +80,7 @@ func TestAddSixRecords(t *testing.T) {
 
 func TestPopItem(t *testing.T) {
 	i := Record[uint]{0, 0}
-	h := Heap[uint]{}
+	h := HeapMax[uint]{}
 	h.AddItem(i)
 	r := h.PopItem()
 	if i[0] != r[0] {
@@ -146,7 +146,7 @@ func TestParent(t *testing.T) {
 
 func TestHeapifyOneNode(t *testing.T) {
 	arr := []Record[uint]{{10}, {12}, {22}}
-	h := Heap[uint]{arr, 1}
+	h := HeapMax[uint]{arr, 1}
 	h.heapify(0)
 	if h.Records[0][0] != 10 {
 		t.Error(h)
@@ -155,7 +155,7 @@ func TestHeapifyOneNode(t *testing.T) {
 
 func TestHeapifyThreeNode(t *testing.T) {
 	arr := []Record[uint]{{10}, {12}, {22}}
-	h := Heap[uint]{arr, 3}
+	h := HeapMax[uint]{arr, 3}
 	h.heapify(0)
 	if h.Records[0][0] != 22 {
 		t.Error(h)
@@ -171,7 +171,7 @@ func TestHeapifyThreeNode(t *testing.T) {
 func TestHeapifySixNode(t *testing.T) {
 	arr := []Record[uint]{{4}, {14}, {7}, {2}, {8}, {1}}
 	result := []uint{14, 8, 7, 2, 4, 1}
-	h := Heap[uint]{arr, 6}
+	h := HeapMax[uint]{arr, 6}
 	h.heapify(0)
 	for i := range 6 {
 		if h.Records[i][0] != result[i] {
@@ -189,4 +189,16 @@ func TestBuildMaxHeap(t *testing.T) {
 			t.Error(h)
 		}
 	}
+}
+
+func TestSortMax(t *testing.T) {
+	arr := []Record[uint]{{4}, {14}, {7}, {2}, {8}, {1}}
+	sorted := []Record[uint]{{1}, {2}, {4}, {7}, {8}, {14}}
+	result := SortMax(arr)
+	for i, r := range result {
+		if r != sorted[i] {
+			t.Error(sorted, result)
+		}
+	}
+
 }

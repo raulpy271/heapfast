@@ -12,6 +12,9 @@ type Heap[T cmp.Ordered] struct {
 	Length  uint
 }
 
+type HeapMax[T cmp.Ordered] Heap[T]
+type HeapMin[T cmp.Ordered] Heap[T]
+
 func left(i uint) uint {
 	// i * 2 + 1
 	return (i << 1) + 1
@@ -26,7 +29,7 @@ func parent(i uint) uint {
 	return uint(math.Floor((float64(i) - 1) / 2))
 }
 
-func (h *Heap[T]) heapify(i uint) {
+func (h *HeapMax[T]) heapify(i uint) {
 	var l, r, largest uint
 	for i < h.Length {
 		l = left(i)
@@ -48,8 +51,8 @@ func (h *Heap[T]) heapify(i uint) {
 	}
 }
 
-func BuildMaxHeap[T cmp.Ordered](records []Record[T]) *Heap[T] {
-	heap := &Heap[T]{records, uint(len(records))}
+func BuildMaxHeap[T cmp.Ordered](records []Record[T]) *HeapMax[T] {
+	heap := &HeapMax[T]{records, uint(len(records))}
 	i := int(math.Floor((float64(len(records)) / 2) - 1))
 	for ; i >= 0; i-- {
 		heap.heapify(uint(i))
@@ -59,10 +62,15 @@ func BuildMaxHeap[T cmp.Ordered](records []Record[T]) *Heap[T] {
 
 func SortMax[T cmp.Ordered](records []Record[T]) []Record[T] {
 	heap := BuildMaxHeap(records)
+	for i := heap.Length - 1; i > 0; i-- {
+		heap.Records[i], heap.Records[0] = heap.Records[0], heap.Records[i]
+		heap.Length--
+		heap.heapify(0)
+	}
 	return heap.Records
 }
 
-func (h *Heap[T]) AddItem(record Record[T]) {
+func (h *HeapMax[T]) AddItem(record Record[T]) {
 	if int(h.Length) == len(h.Records) {
 		h.Records = append(h.Records, record)
 	} else {
@@ -76,11 +84,11 @@ func (h *Heap[T]) AddItem(record Record[T]) {
 	}
 }
 
-func (h Heap[T]) Max() Record[T] {
+func (h HeapMax[T]) Top() Record[T] {
 	return h.Records[0]
 }
 
-func (h *Heap[T]) PopItem() Record[T] {
+func (h *HeapMax[T]) PopItem() Record[T] {
 	i := h.Records[0]
 	h.Records[0] = h.Records[h.Length-1]
 	h.Length--
