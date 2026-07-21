@@ -200,5 +200,4 @@ func TestSortMax(t *testing.T) {
 			t.Error(sorted, result)
 		}
 	}
-
 }
