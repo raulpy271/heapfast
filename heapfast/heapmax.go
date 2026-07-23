@@ -5,7 +5,7 @@ import (
 	"math"
 )
 
-type HeapMax[T cmp.Ordered] Heap[T]
+type HeapMax[T cmp.Ordered] heapt[T]
 
 func (h *HeapMax[T]) heapify(i uint) {
 	var l, r, largest uint
@@ -38,8 +38,7 @@ func BuildMaxHeap[T cmp.Ordered](records []Record[T]) *HeapMax[T] {
 	return heap
 }
 
-func SortMax[T cmp.Ordered](records []Record[T]) []Record[T] {
-	heap := BuildMaxHeap(records)
+func (heap *HeapMax[T]) Sort() []Record[T] {
 	for i := heap.Length - 1; i > 0; i-- {
 		heap.Records[i], heap.Records[0] = heap.Records[0], heap.Records[i]
 		heap.Length--

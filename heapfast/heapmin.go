@@ -5,7 +5,7 @@ import (
 	"math"
 )
 
-type HeapMin[T cmp.Ordered] Heap[T]
+type HeapMin[T cmp.Ordered] heapt[T]
 
 func (h *HeapMin[T]) heapify(i uint) {
 	var l, r, lowest uint
@@ -38,8 +38,7 @@ func BuildMinHeap[T cmp.Ordered](records []Record[T]) *HeapMin[T] {
 	return heap
 }
 
-func SortMin[T cmp.Ordered](records []Record[T]) []Record[T] {
-	heap := BuildMinHeap(records)
+func (heap *HeapMin[T]) Sort() []Record[T] {
 	for i := heap.Length - 1; i > 0; i-- {
 		heap.Records[i], heap.Records[0] = heap.Records[0], heap.Records[i]
 		heap.Length--

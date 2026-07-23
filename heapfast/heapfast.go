@@ -7,7 +7,7 @@ import (
 
 type Record[T cmp.Ordered] [2]T
 
-type Heap[T cmp.Ordered] struct {
+type heapt[T cmp.Ordered] struct {
 	Records []Record[T]
 	Length  uint
 }
@@ -26,3 +26,10 @@ func parent(i uint) uint {
 	return uint(math.Floor((float64(i) - 1) / 2))
 }
 
+type Heap[T cmp.Ordered] interface {
+	heapify(uint)
+	Sort() []Record[T]
+	Top() Record[T]
+	AddItem(Record[T])
+	PopItem() Record[T]
+}

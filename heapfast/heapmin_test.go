@@ -71,7 +71,8 @@ func TestPopThreeHeapMin(t *testing.T) {
 func TestSortMin(t *testing.T) {
 	arr := []Record[uint]{{4}, {14}, {7}, {2}, {8}, {1}}
 	sorted := []Record[uint]{{14}, {8}, {7}, {4}, {2}, {1}}
-	result := SortMin(arr)
+	heap := BuildMinHeap(arr)
+	result := heap.Sort()
 	for i, r := range result {
 		if r != sorted[i] {
 			t.Error(sorted, result)
