@@ -3,12 +3,10 @@ package heapfast
 import (
 	"cmp"
 	"math"
-
-	"golang.org/x/exp/constraints"
 )
 
 type Record[K cmp.Ordered, V any] struct {
-	Key K
+	Key   K
 	Value V
 }
 
@@ -21,8 +19,12 @@ type SizedNumber interface {
 	uint64 | int64 | int32 | uint32 | float32 | float64
 }
 
+type Integer interface {
+	~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr | ~int | ~int8 | ~int16 | ~int32 | ~int64
+}
+
 type Number interface {
-	constraints.Integer | constraints.Float
+	Integer | ~float32 | ~float64
 }
 
 func left(i uint) uint {
