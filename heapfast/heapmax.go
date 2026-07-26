@@ -5,19 +5,19 @@ import (
 	"math"
 )
 
-type HeapMax[T cmp.Ordered] heapt[T]
+type HeapMax[K cmp.Ordered, V any] heapt[K, V]
 
-func (h *HeapMax[T]) heapify(i uint) {
+func (h *HeapMax[K, V]) heapify(i uint) {
 	var l, r, largest uint
 	for i < h.Length {
 		l = left(i)
 		r = right(i)
-		if l < h.Length && h.Records[i][0] < h.Records[l][0] {
+		if l < h.Length && h.Records[i].Key < h.Records[l].Key {
 			largest = l
 		} else {
 			largest = i
 		}
-		if r < h.Length && h.Records[largest][0] < h.Records[r][0] {
+		if r < h.Length && h.Records[largest].Key < h.Records[r].Key {
 			largest = r
 		}
 		if i == largest {
@@ -29,8 +29,8 @@ func (h *HeapMax[T]) heapify(i uint) {
 	}
 }
 
-func BuildMaxHeap[T cmp.Ordered](records []Record[T]) *HeapMax[T] {
-	heap := &HeapMax[T]{records, uint(len(records))}
+func BuildMaxHeap[K cmp.Ordered, V any](records []Record[K, V]) *HeapMax[K, V] {
+	heap := &HeapMax[K, V]{records, uint(len(records))}
 	i := int(math.Floor((float64(len(records)) / 2) - 1))
 	for ; i >= 0; i-- {
 		heap.heapify(uint(i))
@@ -38,7 +38,7 @@ func BuildMaxHeap[T cmp.Ordered](records []Record[T]) *HeapMax[T] {
 	return heap
 }
 
-func (heap *HeapMax[T]) Sort() []Record[T] {
+func (heap *HeapMax[K, V]) Sort() []Record[K, V] {
 	for i := heap.Length - 1; i > 0; i-- {
 		heap.Records[i], heap.Records[0] = heap.Records[0], heap.Records[i]
 		heap.Length--
@@ -47,7 +47,7 @@ func (heap *HeapMax[T]) Sort() []Record[T] {
 	return heap.Records
 }
 
-func (h *HeapMax[T]) AddItem(record Record[T]) {
+func (h *HeapMax[K, V]) AddItem(record Record[K, V]) {
 	if int(h.Length) == len(h.Records) {
 		h.Records = append(h.Records, record)
 	} else {
@@ -55,17 +55,17 @@ func (h *HeapMax[T]) AddItem(record Record[T]) {
 	}
 	i := h.Length
 	h.Length++
-	for i > 0 && h.Records[parent(i)][0] < h.Records[i][0] {
+	for i > 0 && h.Records[parent(i)].Key < h.Records[i].Key {
 		h.Records[i], h.Records[parent(i)] = h.Records[parent(i)], h.Records[i]
 		i = parent(i)
 	}
 }
 
-func (h HeapMax[T]) Top() Record[T] {
+func (h HeapMax[K, V]) Top() Record[K, V] {
 	return h.Records[0]
 }
 
-func (h *HeapMax[T]) PopItem() Record[T] {
+func (h *HeapMax[K, V]) PopItem() Record[K, V] {
 	i := h.Records[0]
 	h.Records[0] = h.Records[h.Length-1]
 	h.Length--

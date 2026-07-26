@@ -5,19 +5,19 @@ import (
 	"math"
 )
 
-type HeapMin[T cmp.Ordered] heapt[T]
+type HeapMin[K cmp.Ordered, V any] heapt[K, V]
 
-func (h *HeapMin[T]) heapify(i uint) {
+func (h *HeapMin[K, V]) heapify(i uint) {
 	var l, r, lowest uint
 	for i < h.Length {
 		l = left(i)
 		r = right(i)
-		if l < h.Length && h.Records[i][0] > h.Records[l][0] {
+		if l < h.Length && h.Records[i].Key > h.Records[l].Key {
 			lowest = l
 		} else {
 			lowest = i
 		}
-		if r < h.Length && h.Records[lowest][0] > h.Records[r][0] {
+		if r < h.Length && h.Records[lowest].Key > h.Records[r].Key {
 			lowest = r
 		}
 		if i == lowest {
@@ -29,8 +29,8 @@ func (h *HeapMin[T]) heapify(i uint) {
 	}
 }
 
-func BuildMinHeap[T cmp.Ordered](records []Record[T]) *HeapMin[T] {
-	heap := &HeapMin[T]{records, uint(len(records))}
+func BuildMinHeap[K cmp.Ordered, V any](records []Record[K, V]) *HeapMin[K, V] {
+	heap := &HeapMin[K, V]{records, uint(len(records))}
 	i := int(math.Floor((float64(len(records)) / 2) - 1))
 	for ; i >= 0; i-- {
 		heap.heapify(uint(i))
@@ -38,7 +38,7 @@ func BuildMinHeap[T cmp.Ordered](records []Record[T]) *HeapMin[T] {
 	return heap
 }
 
-func (heap *HeapMin[T]) Sort() []Record[T] {
+func (heap *HeapMin[K, V]) Sort() []Record[K, V] {
 	for i := heap.Length - 1; i > 0; i-- {
 		heap.Records[i], heap.Records[0] = heap.Records[0], heap.Records[i]
 		heap.Length--
@@ -47,7 +47,7 @@ func (heap *HeapMin[T]) Sort() []Record[T] {
 	return heap.Records
 }
 
-func (h *HeapMin[T]) AddItem(record Record[T]) {
+func (h *HeapMin[K, V]) AddItem(record Record[K, V]) {
 	if int(h.Length) == len(h.Records) {
 		h.Records = append(h.Records, record)
 	} else {
@@ -55,17 +55,17 @@ func (h *HeapMin[T]) AddItem(record Record[T]) {
 	}
 	i := h.Length
 	h.Length++
-	for i > 0 && h.Records[parent(i)][0] > h.Records[i][0] {
+	for i > 0 && h.Records[parent(i)].Key > h.Records[i].Key {
 		h.Records[i], h.Records[parent(i)] = h.Records[parent(i)], h.Records[i]
 		i = parent(i)
 	}
 }
 
-func (h HeapMin[T]) Top() Record[T] {
+func (h HeapMin[K, V]) Top() Record[K, V] {
 	return h.Records[0]
 }
 
-func (h *HeapMin[T]) PopItem() Record[T] {
+func (h *HeapMin[K, V]) PopItem() Record[K, V] {
 	i := h.Records[0]
 	h.Records[0] = h.Records[h.Length-1]
 	h.Length--
