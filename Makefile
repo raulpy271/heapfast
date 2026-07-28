@@ -17,10 +17,11 @@ testjs: js/main.wasm js/*.js js/test/*.js js/package*.json
 test: testheap testinternal testjs
 
 .PHONY: fmt
-fmt: wasm/wasm.go internal/*.go heapfast/*.go
+fmt: wasm/wasm.go internal/*.go heapfast/*.go js/*.js js/test/*.js js/package*.json
 	@go fmt github.com/raulpy271/heapfast/heapfast
 	@go fmt github.com/raulpy271/heapfast/internal
 	@go fmt github.com/raulpy271/heapfast/wasm
+	@cd js && npm run fmt
 
 .PHONY: build
 build: js/main.wasm
