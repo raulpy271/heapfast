@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "HeapSort and Priority Queues compiled to WASM",
   "main": "heapfast.js",
+  "type": "module",
   "files": [
     "heapfast.js",
     "main.wasm",
@@ -10,7 +11,7 @@
     "heapfast.d.ts"
   ],
   "scripts": {
-    "test": "npx mocha"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",

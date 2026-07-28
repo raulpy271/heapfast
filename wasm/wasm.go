@@ -103,5 +103,31 @@ func main() {
 		js.CopyBytesToJS(args[0], dst)
 		return len(records)
 	}))
+	js.Global().Set("HeapsortAscFloat", js.FuncOf(func(this js.Value, args []js.Value) any {
+		if !args[0].InstanceOf(js.Global().Get("Uint8Array")) {
+			panic("The first parameter should be an array")
+		}
+		dst := make([]byte, args[0].Length())
+		js.CopyBytesToGo(dst, args[0])
+		records := internal.CastRecordsFromBytes[float64, int64](dst)
+		heap := heapfast.BuildMaxHeap(records)
+		heap.Sort()
+		dst = internal.CastRecordsToBytes(records)
+		js.CopyBytesToJS(args[0], dst)
+		return len(records)
+	}))
+	js.Global().Set("HeapsortDescInt", js.FuncOf(func(this js.Value, args []js.Value) any {
+		if !args[0].InstanceOf(js.Global().Get("Uint8Array")) {
+			panic("The first parameter should be an array")
+		}
+		dst := make([]byte, args[0].Length())
+		js.CopyBytesToGo(dst, args[0])
+		records := internal.CastRecordsFromBytes[float64, int64](dst)
+		heap := heapfast.BuildMinHeap(records)
+		heap.Sort()
+		dst = internal.CastRecordsToBytes(records)
+		js.CopyBytesToJS(args[0], dst)
+		return len(records)
+	}))
 	select {}
 }
