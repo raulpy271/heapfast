@@ -6,14 +6,16 @@ import (
 )
 
 type Record[K cmp.Ordered, V any] struct {
-	Key   K
 	Value V
+	Key   K
 }
 
 type heapt[K cmp.Ordered, V any] struct {
 	Records []Record[K, V]
 	Length  uint
 }
+
+type Zero struct{}
 
 type SizedNumber interface {
 	uint64 | int64 | int32 | uint32 | float32 | float64
@@ -24,7 +26,7 @@ type Integer interface {
 }
 
 type Number interface {
-	Integer | ~float32 | ~float64
+	SizedNumber | Integer | ~float32 | ~float64
 }
 
 func left(i uint) uint {
