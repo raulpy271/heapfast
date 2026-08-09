@@ -6,7 +6,7 @@ import (
 	"github.com/raulpy271/heapfast/heapfast"
 )
 
-func CastRecordsFromBytes[K heapfast.SizedNumber, V heapfast.SizedNumber](bytes []byte) []heapfast.Record[K, V] {
+func CastRecordsFromBytes[K heapfast.SizedNumber, V heapfast.SizedNumber | heapfast.Zero](bytes []byte) []heapfast.Record[K, V] {
 	var rec heapfast.Record[K, V]
 	var bytes_ptr *byte = unsafe.SliceData(bytes)
 	var records_ptr *heapfast.Record[K, V] = (*heapfast.Record[K, V])(unsafe.Pointer(bytes_ptr))
