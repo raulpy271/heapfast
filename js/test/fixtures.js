@@ -1,4 +1,3 @@
-
 import heapfast from "../heapfast.js";
 
 export function mochaGlobalSetup() {

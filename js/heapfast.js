@@ -46,7 +46,7 @@ function heapsortWasm(buffer, orderby, type, withValues) {
   return globalThis[funcname](buffer);
 }
 
-export function heapsort(array, orderby) {
+export function heapsort(array, orderby, key) {
   if (array instanceof BigInt64Array) {
     return heapsortWasm(new Uint8Array(array.buffer), orderby, TYPE_INT, false);
   }
@@ -79,6 +79,33 @@ export function heapsort(array, orderby) {
     }
     return len;
   }
+  if (Array.isArray(array) && key) {
+    let keyfunc;
+    if (typeof key === "function") {
+      keyfunc = key;
+    } else if (typeof key === "string") {
+      keyfunc = (obj) => obj[key];
+    } else {
+      throw new TypeError("unsupported key type");
+    }
+    const wasmArray = new Float64Array(array.length * 2);
+    for (let i = 0; i < array.length; i++) {
+      wasmArray[i * 2] = i;
+      wasmArray[i * 2 + 1] = keyfunc(array[i]);
+    }
+    const len = heapsortWasm(
+      new Uint8Array(wasmArray.buffer),
+      orderby,
+      TYPE_FLOAT,
+      true,
+    );
+    const original = array.slice(0, len);
+    for (let i = 0; i < len; i++) {
+      array[i] = original[wasmArray[i * 2]];
+    }
+    return len;
+  }
+
   throw new TypeError(
     "heapsort: unsupported array type, expected BigInt64Array, Float64Array, Int32Array, Float32Array, Uint32Array or Array",
   );

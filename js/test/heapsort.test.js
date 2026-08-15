@@ -2,7 +2,6 @@ import assert from "node:assert";
 
 import heapfast from "../heapfast.js";
 
-
 describe("sort arrays without values", function () {
   it("Should sort BigInt64Array", function () {
     const intarr = new BigInt64Array([20n, 30n, 10n, 40n]);
@@ -84,5 +83,52 @@ describe("sort arrays without values", function () {
     assert.throws(() => {
       heapfast.heapsort(arr, heapfast.ASC);
     }, TypeError);
+  });
+});
+
+describe("sort arrays of objects", function () {
+  it("Should sort using string key", function () {
+    const persons = [
+      { name: "Raul", skill: "dumb", age: 33 },
+      { name: "Otwell", skill: "PHP", age: 23 },
+      { name: "Ken", skill: "Go", age: 13 },
+      { name: "Peter", skill: "AI", age: 58 },
+      { name: "Linus", skill: "system design", age: 18 },
+      { name: "Bob", skill: "clean code", age: 40 },
+    ];
+    const ascresult = [2, 4, 1, 0, 5, 3].map((i) => persons[i]);
+    const descresult = [3, 5, 0, 1, 4, 2].map((i) => persons[i]);
+    let len = heapfast.heapsort(persons, heapfast.ASC, "age");
+    assert.equal(len, persons.length);
+    for (let i = 0; i < len; i++) {
+      assert.equal(persons[i], ascresult[i]);
+    }
+    len = heapfast.heapsort(persons, heapfast.DESC, "age");
+    assert.equal(len, persons.length);
+    for (let i = 0; i < len; i++) {
+      assert.equal(persons[i], descresult[i]);
+    }
+  });
+  it("Should sort using function key", function () {
+    const persons = [
+      { name: "Raul", skill: "dumb", age: 33 },
+      { name: "Otwell", skill: "PHP", age: 23 },
+      { name: "Ken", skill: "Go", age: 13 },
+      { name: "Peter", skill: "AI", age: 58 },
+      { name: "Linus", skill: "system design", age: 18 },
+      { name: "Bob", skill: "clean code", age: 40 },
+    ];
+    const ascresult = [2, 4, 1, 0, 5, 3].map((i) => persons[i]);
+    const descresult = [3, 5, 0, 1, 4, 2].map((i) => persons[i]);
+    let len = heapfast.heapsort(persons, heapfast.ASC, (p) => p.age);
+    assert.equal(len, persons.length);
+    for (let i = 0; i < len; i++) {
+      assert.equal(persons[i], ascresult[i]);
+    }
+    len = heapfast.heapsort(persons, heapfast.DESC, (p) => p.age);
+    assert.equal(len, persons.length);
+    for (let i = 0; i < len; i++) {
+      assert.equal(persons[i], descresult[i]);
+    }
   });
 });
