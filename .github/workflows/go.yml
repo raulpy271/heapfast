@@ -19,14 +19,14 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v4
       with:
-        go-version: '1.26'
+        go-version: '1.25'
+
+    - name: Go unit tests
+      run: make testheap && make testinternal
 
     - uses: acifani/setup-tinygo@v3
       with:
         tinygo-version: '0.40.1'
-
-    - name: Go unit tests
-      run: make testheap && make testinternal
 
     - name: WASM Build
       run: make build
