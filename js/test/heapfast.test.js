@@ -112,10 +112,10 @@ describe("heapsort", function () {
       assert.equal(intarr[i], descresult[i]);
     }
   });
-  it("Should sort BigInt32Array", function () {
-    const intarr = new BigInt32Array([20, 30, 10, 40]);
-    const ascresult = [10n, 20, 30, 40];
-    const descresult = [40n, 30n, 20, 10];
+  it("Should sort Int32Array", function () {
+    const intarr = new Int32Array([20, 30, 10, 40]);
+    const ascresult = [10, 20, 30, 40];
+    const descresult = [40, 30, 20, 10];
     let len = heapfast.heapsort(intarr, heapfast.ASC);
     assert.equal(len, 4);
     for (let i = 0; i < 4; i++) {
