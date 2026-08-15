@@ -1,6 +1,9 @@
 js/main.wasm: wasm/wasm.go internal/*.go heapfast/*.go
 	tinygo build --target=wasm -o js/main.wasm ./wasm 
 
+js/node_modules: js/package*.json
+	cd js && npm install
+
 .PHONY: testheap
 testheap: go.* heapfast/*.go
 	go test github.com/raulpy271/heapfast/heapfast
@@ -10,7 +13,7 @@ testinternal: testheap internal/*.go
 	go test github.com/raulpy271/heapfast/internal
 
 .PHONY: testjs
-testjs: js/main.wasm js/*.js js/test/*.js js/package*.json
+testjs: js/main.wasm js/*.js js/test/*.js js/package*.json js/node_modules
 	cd js && npm test
 
 .PHONY: test
