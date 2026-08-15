@@ -13,7 +13,7 @@ func addMethods[K heapfast.Number, V heapfast.Integer, T heapfast.Heap[K, V]](he
 	heapref["add"] = js.FuncOf(func(this js.Value, args []js.Value) any {
 		v := this.Get("pos").Int()
 		h := heaps[v]
-		h.AddItem(heapfast.Record[K, V]{K(args[0].Float()), V(args[1].Int())})
+		h.AddItem(heapfast.Record[K, V]{V(args[1].Int()), K(args[0].Float())})
 		return nil
 	})
 	heapref["addBulk"] = js.FuncOf(func(this js.Value, args []js.Value) any {
@@ -26,7 +26,7 @@ func addMethods[K heapfast.Number, V heapfast.Integer, T heapfast.Heap[K, V]](he
 		values := args[1]
 		l := keys.Length()
 		for i := range l {
-			h.AddItem(heapfast.Record[K, V]{K(keys.Index(i).Float()), V(values.Index(i).Int())})
+			h.AddItem(heapfast.Record[K, V]{V(values.Index(i).Int()), K(keys.Index(i).Float())})
 		}
 		return nil
 	})
@@ -36,6 +36,15 @@ func addMethods[K heapfast.Number, V heapfast.Integer, T heapfast.Heap[K, V]](he
 		i := h.PopItem()
 		return []any{i.Key, i.Value}
 	})
+}
+
+func jsValueToRecords[K heapfast.SizedNumber, V heapfast.SizedNumber | heapfast.Zero](v js.Value) ([]byte, []heapfast.Record[K, V]) {
+	if !v.InstanceOf(js.Global().Get("Uint8Array")) {
+		panic("The first parameter should be an array")
+	}
+	dst := make([]byte, v.Length())
+	js.CopyBytesToGo(dst, v)
+	return dst, internal.CastRecordsFromBytes[K, V](dst)
 }
 
 func main() {
@@ -77,52 +86,64 @@ func main() {
 		addMethods(heapsfloat, heapref)
 		return heapref
 	}))
-	js.Global().Set("HeapsortAscInt", js.FuncOf(func(this js.Value, args []js.Value) any {
-		if !args[0].InstanceOf(js.Global().Get("Uint8Array")) {
-			panic("The first parameter should be an array")
-		}
-		dst := make([]byte, args[0].Length())
-		js.CopyBytesToGo(dst, args[0])
-		records := internal.CastRecordsFromBytes[int64, int64](dst)
+	js.Global().Set("HeapsortAscIntKV", js.FuncOf(func(this js.Value, args []js.Value) any {
+		dst, records := jsValueToRecords[int64, int64](args[0])
 		heap := heapfast.BuildMaxHeap(records)
 		heap.Sort()
 		dst = internal.CastRecordsToBytes(records)
 		js.CopyBytesToJS(args[0], dst)
 		return len(records)
 	}))
-	js.Global().Set("HeapsortDescInt", js.FuncOf(func(this js.Value, args []js.Value) any {
-		if !args[0].InstanceOf(js.Global().Get("Uint8Array")) {
-			panic("The first parameter should be an array")
-		}
-		dst := make([]byte, args[0].Length())
-		js.CopyBytesToGo(dst, args[0])
-		records := internal.CastRecordsFromBytes[int64, int64](dst)
+	js.Global().Set("HeapsortAscIntK", js.FuncOf(func(this js.Value, args []js.Value) any {
+		dst, records := jsValueToRecords[int64, heapfast.Zero](args[0])
+		heap := heapfast.BuildMaxHeap(records)
+		heap.Sort()
+		dst = internal.CastRecordsToBytes(records)
+		js.CopyBytesToJS(args[0], dst)
+		return len(records)
+	}))
+	js.Global().Set("HeapsortDescIntKV", js.FuncOf(func(this js.Value, args []js.Value) any {
+		dst, records := jsValueToRecords[int64, int64](args[0])
 		heap := heapfast.BuildMinHeap(records)
 		heap.Sort()
 		dst = internal.CastRecordsToBytes(records)
 		js.CopyBytesToJS(args[0], dst)
 		return len(records)
 	}))
-	js.Global().Set("HeapsortAscFloat", js.FuncOf(func(this js.Value, args []js.Value) any {
-		if !args[0].InstanceOf(js.Global().Get("Uint8Array")) {
-			panic("The first parameter should be an array")
-		}
-		dst := make([]byte, args[0].Length())
-		js.CopyBytesToGo(dst, args[0])
-		records := internal.CastRecordsFromBytes[float64, int64](dst)
+	js.Global().Set("HeapsortDescIntK", js.FuncOf(func(this js.Value, args []js.Value) any {
+		dst, records := jsValueToRecords[int64, heapfast.Zero](args[0])
+		heap := heapfast.BuildMinHeap(records)
+		heap.Sort()
+		dst = internal.CastRecordsToBytes(records)
+		js.CopyBytesToJS(args[0], dst)
+		return len(records)
+	}))
+	js.Global().Set("HeapsortAscFloatKV", js.FuncOf(func(this js.Value, args []js.Value) any {
+		dst, records := jsValueToRecords[float64, int64](args[0])
 		heap := heapfast.BuildMaxHeap(records)
 		heap.Sort()
 		dst = internal.CastRecordsToBytes(records)
 		js.CopyBytesToJS(args[0], dst)
 		return len(records)
 	}))
-	js.Global().Set("HeapsortDescInt", js.FuncOf(func(this js.Value, args []js.Value) any {
-		if !args[0].InstanceOf(js.Global().Get("Uint8Array")) {
-			panic("The first parameter should be an array")
-		}
-		dst := make([]byte, args[0].Length())
-		js.CopyBytesToGo(dst, args[0])
-		records := internal.CastRecordsFromBytes[float64, int64](dst)
+	js.Global().Set("HeapsortAscFloatK", js.FuncOf(func(this js.Value, args []js.Value) any {
+		dst, records := jsValueToRecords[float64, heapfast.Zero](args[0])
+		heap := heapfast.BuildMaxHeap(records)
+		heap.Sort()
+		dst = internal.CastRecordsToBytes(records)
+		js.CopyBytesToJS(args[0], dst)
+		return len(records)
+	}))
+	js.Global().Set("HeapsortDescFloatKV", js.FuncOf(func(this js.Value, args []js.Value) any {
+		dst, records := jsValueToRecords[float64, int64](args[0])
+		heap := heapfast.BuildMinHeap(records)
+		heap.Sort()
+		dst = internal.CastRecordsToBytes(records)
+		js.CopyBytesToJS(args[0], dst)
+		return len(records)
+	}))
+	js.Global().Set("HeapsortDescFloatK", js.FuncOf(func(this js.Value, args []js.Value) any {
+		dst, records := jsValueToRecords[float64, heapfast.Zero](args[0])
 		heap := heapfast.BuildMinHeap(records)
 		heap.Sort()
 		dst = internal.CastRecordsToBytes(records)

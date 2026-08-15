@@ -13,7 +13,7 @@ func CastRecordsFromBytes[K heapfast.SizedNumber, V heapfast.SizedNumber | heapf
 	return unsafe.Slice(records_ptr, len(bytes)/int(unsafe.Sizeof(rec)))
 }
 
-func CastRecordsToBytes[K heapfast.SizedNumber, V heapfast.SizedNumber](rec []heapfast.Record[K, V]) []byte {
+func CastRecordsToBytes[K heapfast.SizedNumber, V heapfast.SizedNumber | heapfast.Zero](rec []heapfast.Record[K, V]) []byte {
 	var rec_ptr *heapfast.Record[K, V] = unsafe.SliceData(rec)
 	var bytes_ptr *byte = (*byte)(unsafe.Pointer(rec_ptr))
 	return unsafe.Slice(bytes_ptr, len(rec)*int(unsafe.Sizeof(rec[0])))

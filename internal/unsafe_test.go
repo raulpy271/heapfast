@@ -34,7 +34,7 @@ func TestCastRecordsToBytes(t *testing.T) {
 
 func TestCastRecordsFromBytesWithZeroValue(t *testing.T) {
 	recs := [3]heapfast.Record[uint64, heapfast.Zero]{{struct{}{}, 20}, {struct{}{}, 21}, {struct{}{}, 22}}
-	if int(unsafe.Sizeof(recs)) != 3 * 8 {
+	if int(unsafe.Sizeof(recs)) != 3*8 {
 		t.Error("Records with empty value should have the size of a 64 integer")
 	}
 	raw := make([]byte, 0, int(unsafe.Sizeof(recs[0]))*len(recs))

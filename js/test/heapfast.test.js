@@ -1,41 +1,130 @@
 import assert from "node:assert";
 
-import { startWasmModule } from "../heapfast.js";
+import heapfast from "../heapfast.js";
 
 before(function () {
   const go = new Go();
-  startWasmModule(go);
+  heapfast.startWasmModule(go);
 });
 
 describe("HeapsortExported", function () {
   it("Should sort integer array", function () {
-    const intarr = new BigInt64Array([20n, 0n, 30n, 0n, 10n, 0n, 40n, 0n]);
+    const intarr = new BigInt64Array([20n, 30n, 10n, 40n]);
     const ascresult = [10n, 20n, 30n, 40n];
     const descresult = [40n, 30n, 20n, 10n];
-    let len = HeapsortAscInt(new Uint8Array(intarr.buffer));
+    let len = HeapsortAscIntK(new Uint8Array(intarr.buffer));
     assert.equal(len, 4);
     for (let i = 0; i < 4; i++) {
-      assert.equal(intarr[i * 2], ascresult[i]);
+      assert.equal(intarr[i], ascresult[i]);
     }
-    len = HeapsortDescInt(new Uint8Array(intarr.buffer));
+    len = HeapsortDescIntK(new Uint8Array(intarr.buffer));
     assert.equal(len, 4);
     for (let i = 0; i < 4; i++) {
-      assert.equal(intarr[i * 2], descresult[i]);
+      assert.equal(intarr[i], descresult[i]);
     }
   });
   it("Should sort float array", function () {
-    const intarr = new Float64Array([20.1, 0, 30.1, 0, 10.1, 0, 40.1, 0]);
+    const intarr = new Float64Array([20.1, 30.1, 10.1, 40.1]);
     const ascresult = [10.1, 20.1, 30.1, 40.1];
     const descresult = [40.1, 30.1, 20.1, 10.1];
-    let len = HeapsortAscFloat(new Uint8Array(intarr.buffer));
+    let len = HeapsortAscFloatK(new Uint8Array(intarr.buffer));
     assert.equal(len, 4);
     for (let i = 0; i < 4; i++) {
-      assert.equal(intarr[i * 2], ascresult[i]);
+      assert.equal(intarr[i], ascresult[i]);
     }
-    len = HeapsortDescInt(new Uint8Array(intarr.buffer));
+    len = HeapsortDescFloatK(new Uint8Array(intarr.buffer));
     assert.equal(len, 4);
     for (let i = 0; i < 4; i++) {
-      assert.equal(intarr[i * 2], descresult[i]);
+      assert.equal(intarr[i], descresult[i]);
+    }
+  });
+  it("Should sort integer map", function () {
+    const intarr = new BigInt64Array([2n, 20n, 3n, 30n, 1n, 10n, 4n, 40n]);
+    const ascresult = [
+      { k: 10n, v: 1n },
+      { k: 20n, v: 2n },
+      { k: 30n, v: 3n },
+      { k: 40n, v: 4n },
+    ];
+    const descresult = [
+      { k: 40n, v: 4n },
+      { k: 30n, v: 3n },
+      { k: 20n, v: 2n },
+      { k: 10n, v: 1n },
+    ];
+    let len = HeapsortAscIntKV(new Uint8Array(intarr.buffer));
+    assert.equal(len, 4);
+    for (let i = 0; i < 4; i++) {
+      assert.equal(intarr[i * 2 + 1], ascresult[i].k);
+      assert.equal(intarr[i * 2], ascresult[i].v);
+    }
+    len = HeapsortDescIntKV(new Uint8Array(intarr.buffer));
+    assert.equal(len, 4);
+    for (let i = 0; i < 4; i++) {
+      assert.equal(intarr[i * 2 + 1], descresult[i].k);
+      assert.equal(intarr[i * 2], descresult[i].v);
+    }
+  });
+  it("Should sort float map", function () {
+    const intarr = new Float64Array([
+      2.0, 20.1, 3.0, 30.1, 1.0, 10.1, 4.0, 40.1,
+    ]);
+    const ascresult = [
+      { k: 10.1, v: 1.0 },
+      { k: 20.1, v: 2.0 },
+      { k: 30.1, v: 3.0 },
+      { k: 40.1, v: 4.0 },
+    ];
+    const descresult = [
+      { k: 40.1, v: 4.0 },
+      { k: 30.1, v: 3.0 },
+      { k: 20.1, v: 2.0 },
+      { k: 10.1, v: 1.0 },
+    ];
+    let len = HeapsortAscIntKV(new Uint8Array(intarr.buffer));
+    assert.equal(len, 4);
+    for (let i = 0; i < 4; i++) {
+      assert.equal(intarr[i * 2 + 1], ascresult[i].k);
+      assert.equal(intarr[i * 2], ascresult[i].v);
+    }
+    len = HeapsortDescIntKV(new Uint8Array(intarr.buffer));
+    assert.equal(len, 4);
+    for (let i = 0; i < 4; i++) {
+      assert.equal(intarr[i * 2 + 1], descresult[i].k);
+      assert.equal(intarr[i * 2], descresult[i].v);
+    }
+  });
+});
+
+describe("heapsort", function () {
+  it("Should sort BigInt64Array", function () {
+    const intarr = new BigInt64Array([20n, 30n, 10n, 40n]);
+    const ascresult = [10n, 20n, 30n, 40n];
+    const descresult = [40n, 30n, 20n, 10n];
+    let len = heapfast.heapsort(intarr, heapfast.ASC);
+    assert.equal(len, 4);
+    for (let i = 0; i < 4; i++) {
+      assert.equal(intarr[i], ascresult[i]);
+    }
+    len = heapfast.heapsort(intarr, heapfast.DESC);
+    assert.equal(len, 4);
+    for (let i = 0; i < 4; i++) {
+      assert.equal(intarr[i], descresult[i]);
+    }
+  });
+  it("Should sort BigInt32Array", function () {
+    const intarr = new BigInt32Array([20, 30, 10, 40]);
+    const ascresult = [10n, 20, 30, 40];
+    const descresult = [40n, 30n, 20, 10];
+    let len = heapfast.heapsort(intarr, heapfast.ASC);
+    assert.equal(len, 4);
+    for (let i = 0; i < 4; i++) {
+      assert.equal(intarr[i], ascresult[i]);
+    }
+    len = heapfast.heapsort(intarr, heapfast.DESC);
+    assert.equal(len, 4);
+    for (let i = 0; i < 4; i++) {
+      assert.equal(intarr[i], descresult[i]);
     }
   });
 });
