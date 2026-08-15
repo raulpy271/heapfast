@@ -14,10 +14,6 @@ function createInstance(imports) {
   return new WebAssembly.Instance(wasmModule, imports);
 }
 
-function isFixedSizeArray(array) {
-  return array instanceof BigInt64Array;
-}
-
 export async function startWasmModule(go) {
   if (!go) {
     go = new Go();
@@ -51,26 +47,31 @@ function heapsortWasm(buffer, orderby, type, withValues) {
 }
 
 export function heapsort(array, orderby) {
-  let wasmArray;
-  let type;
-  let data = {};
   if (array instanceof BigInt64Array) {
-    wasmArray = array;
-    type = TYPE_INT;
-  } else if (array instanceof Float64Array) {
-    wasmArray = array;
-    type = TYPE_FLOAT;
+    return heapsortWasm(new Uint8Array(array.buffer), orderby, TYPE_INT, false);
   }
-  if (array instanceof Int32Array) {
-    wasmArray = new Float64Array(array.length);
+  if (array instanceof Float64Array) {
+    return heapsortWasm(
+      new Uint8Array(array.buffer),
+      orderby,
+      TYPE_FLOAT,
+      false,
+    );
+  }
+  if (
+    array instanceof Int32Array ||
+    array instanceof Float32Array ||
+    array instanceof Uint32Array ||
+    (Array.isArray(array) && typeof array[0] === "number")
+  ) {
+    const wasmArray = new Float64Array(array.length);
     for (let i = 0; i < array.length; i++) {
       wasmArray[i] = array[i];
     }
-    type = TYPE_FLOAT;
-    let len = heapsortWasm(
+    const len = heapsortWasm(
       new Uint8Array(wasmArray.buffer),
       orderby,
-      type,
+      TYPE_FLOAT,
       false,
     );
     for (let i = 0; i < len; i++) {
@@ -78,13 +79,9 @@ export function heapsort(array, orderby) {
     }
     return len;
   }
-  let len = heapsortWasm(
-    new Uint8Array(wasmArray.buffer),
-    orderby,
-    type,
-    false,
+  throw new TypeError(
+    "heapsort: unsupported array type, expected BigInt64Array, Float64Array, Int32Array, Float32Array, Uint32Array or Array",
   );
-  return len;
 }
 
 export default {
