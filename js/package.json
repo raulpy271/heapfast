@@ -11,7 +11,7 @@
     "heapfast.d.ts"
   ],
   "scripts": {
-    "test": "mocha",
+    "test": "mocha --require test/fixtures.js",
     "fmt": "prettier . --write"
   },
   "repository": {
