@@ -38,6 +38,33 @@ func addMethods[K heapfast.Number, V heapfast.Integer, T heapfast.Heap[K, V]](he
 	})
 }
 
+func addMethodsZero[K heapfast.Number, T heapfast.Heap[K, heapfast.Zero]](heaps []T, heapref map[string]any) {
+	heapref["add"] = js.FuncOf(func(this js.Value, args []js.Value) any {
+		v := this.Get("pos").Int()
+		h := heaps[v]
+		h.AddItem(heapfast.Record[K, heapfast.Zero]{heapfast.Zero{}, K(args[0].Float())})
+		return nil
+	})
+	heapref["addBulk"] = js.FuncOf(func(this js.Value, args []js.Value) any {
+		if !args[0].InstanceOf(js.Global().Get("Uint8Array")) {
+			panic("The first parameter should be an array")
+		}
+		v := this.Get("pos").Int()
+		h := heaps[v]
+		keys := args[0]
+		l := keys.Length()
+		for _ = range l {
+			h.AddItem(heapfast.Record[K, heapfast.Zero]{heapfast.Zero{}, K(args[0].Float())})
+		}
+		return nil
+	})
+	heapref["pop"] = js.FuncOf(func(this js.Value, args []js.Value) any {
+		v := this.Get("pos").Int()
+		h := heaps[v]
+		i := h.PopItem()
+		return i.Key
+	})
+}
 func jsValueToRecords[K heapfast.SizedNumber, V heapfast.SizedNumber | heapfast.Zero](v js.Value) ([]byte, []heapfast.Record[K, V]) {
 	if !v.InstanceOf(js.Global().Get("Uint8Array")) {
 		panic("The first parameter should be an array")
@@ -48,42 +75,80 @@ func jsValueToRecords[K heapfast.SizedNumber, V heapfast.SizedNumber | heapfast.
 }
 
 func main() {
-	heapsint := make([]heapfast.Heap[int64, int64], 0, 20)
-	heapsfloat := make([]heapfast.Heap[float64, int64], 0, 20)
+	heapsInt := make([]heapfast.Heap[int64, int64], 0, 20)
+	heapsFloat := make([]heapfast.Heap[float64, int64], 0, 20)
+	heapsIntZero := make([]heapfast.Heap[int64, heapfast.Zero], 0, 20)
+	heapsFloatZero := make([]heapfast.Heap[float64, heapfast.Zero], 0, 20)
 	js.Global().Set("NewHeapMaxInt", js.FuncOf(func(this js.Value, args []js.Value) any {
 		h := heapfast.HeapMax[int64, int64]{}
-		heapsint = append(heapsint, &h)
-		pos := len(heapsint) - 1
+		heapsInt = append(heapsInt, &h)
+		pos := len(heapsInt) - 1
 		heapref := make(map[string]any)
 		heapref["pos"] = pos
-		addMethods(heapsint, heapref)
+		addMethods(heapsInt, heapref)
 		return heapref
 	}))
 	js.Global().Set("NewHeapMinInt", js.FuncOf(func(this js.Value, args []js.Value) any {
 		h := heapfast.HeapMin[int64, int64]{}
-		heapsint = append(heapsint, &h)
-		pos := len(heapsint) - 1
+		heapsInt = append(heapsInt, &h)
+		pos := len(heapsInt) - 1
 		heapref := make(map[string]any)
 		heapref["pos"] = pos
-		addMethods(heapsint, heapref)
+		addMethods(heapsInt, heapref)
 		return heapref
 	}))
 	js.Global().Set("NewHeapMaxFloat", js.FuncOf(func(this js.Value, args []js.Value) any {
 		h := heapfast.HeapMax[float64, int64]{}
-		heapsfloat = append(heapsfloat, &h)
-		pos := len(heapsfloat) - 1
+		heapsFloat = append(heapsFloat, &h)
+		pos := len(heapsFloat) - 1
 		heapref := make(map[string]any)
 		heapref["pos"] = pos
-		addMethods(heapsfloat, heapref)
+		addMethods(heapsFloat, heapref)
 		return heapref
 	}))
 	js.Global().Set("NewHeapMinFloat", js.FuncOf(func(this js.Value, args []js.Value) any {
 		h := heapfast.HeapMin[float64, int64]{}
-		heapsfloat = append(heapsfloat, &h)
-		pos := len(heapsfloat) - 1
+		heapsFloat = append(heapsFloat, &h)
+		pos := len(heapsFloat) - 1
 		heapref := make(map[string]any)
 		heapref["pos"] = pos
-		addMethods(heapsfloat, heapref)
+		addMethods(heapsFloat, heapref)
+		return heapref
+	}))
+	js.Global().Set("NewHeapMaxIntZero", js.FuncOf(func(this js.Value, args []js.Value) any {
+		h := heapfast.HeapMax[int64, heapfast.Zero]{}
+		heapsIntZero = append(heapsIntZero, &h)
+		pos := len(heapsIntZero) - 1
+		heapref := make(map[string]any)
+		heapref["pos"] = pos
+		addMethodsZero(heapsIntZero, heapref)
+		return heapref
+	}))
+	js.Global().Set("NewHeapMinIntZero", js.FuncOf(func(this js.Value, args []js.Value) any {
+		h := heapfast.HeapMin[int64, heapfast.Zero]{}
+		heapsIntZero = append(heapsIntZero, &h)
+		pos := len(heapsIntZero) - 1
+		heapref := make(map[string]any)
+		heapref["pos"] = pos
+		addMethodsZero(heapsIntZero, heapref)
+		return heapref
+	}))
+	js.Global().Set("NewHeapMaxFloatZero", js.FuncOf(func(this js.Value, args []js.Value) any {
+		h := heapfast.HeapMax[float64, heapfast.Zero]{}
+		heapsFloatZero = append(heapsFloatZero, &h)
+		pos := len(heapsFloatZero) - 1
+		heapref := make(map[string]any)
+		heapref["pos"] = pos
+		addMethodsZero(heapsFloatZero, heapref)
+		return heapref
+	}))
+	js.Global().Set("NewHeapMinFloatZero", js.FuncOf(func(this js.Value, args []js.Value) any {
+		h := heapfast.HeapMin[float64, heapfast.Zero]{}
+		heapsFloatZero = append(heapsFloatZero, &h)
+		pos := len(heapsFloatZero) - 1
+		heapref := make(map[string]any)
+		heapref["pos"] = pos
+		addMethodsZero(heapsFloatZero, heapref)
 		return heapref
 	}))
 	js.Global().Set("HeapsortAscIntKV", js.FuncOf(func(this js.Value, args []js.Value) any {
