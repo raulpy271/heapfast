@@ -1,6 +1,18 @@
 # :spider_web: HeapSort compiled to WebAssembly
 
 [![Unit Tests](https://github.com/raulpy271/heapfast/actions/workflows/go.yml/badge.svg)](https://github.com/raulpy271/heapfast/actions/workflows/go.yml)
+[![Downloads](https://img.shields.io/npm/dt/heapfast.svg)](https://npmjs.com/package/heapfast)
+[![Github stars](https://img.shields.io/github/stars/raulpy271/heapfast.svg)](https://github.com/raulpy271/heapfast)
+[![npm version](https://img.shields.io/npm/v/heapfast.svg)](https://npmjs.com/package/heapfast)
+[![license MIT](https://img.shields.io/npm/l/heapfast.svg)](https://github.com/raulpy271/epqueue/blob/main/LICENSE)
+
+A HeapSort algorithm written in Go Lang and compiled to WebAssembly. The compiled code is available in a NPM package, it's possible to use in any JS environment that supports WASM.
+
+To install and import the package, is simple as any other nodejs library:
+
+```sh
+npm install heapfast
+```
 
 ## :children_crossing: Usage example
 
