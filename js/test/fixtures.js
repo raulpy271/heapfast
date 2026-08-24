@@ -1,6 +1,6 @@
-import heapfast from "../heapfast.js";
+import heapfast from "../dist/main.js";
 
-export function mochaGlobalSetup() {
+export async function mochaGlobalSetup() {
   const go = new Go();
   heapfast.startWasmModule(go);
 }

@@ -34,3 +34,4 @@ go.work.sum
 
 js/main.wasm
 js/node_modules/**
+js/dist/**

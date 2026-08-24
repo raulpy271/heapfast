@@ -1,6 +1,6 @@
 import assert from "node:assert";
 
-import heapfast from "../heapfast.js";
+import heapfast from "../dist/main.js";
 
 describe("sort arrays without values", function () {
   it("Should sort BigInt64Array", function () {

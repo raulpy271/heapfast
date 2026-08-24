@@ -4,6 +4,9 @@ js/main.wasm: wasm/wasm.go internal/*.go heapfast/*.go
 js/node_modules: js/package*.json
 	cd js && npm install
 
+js/dist: js/*.js js/node_modules
+	cd js && npm run build
+
 .PHONY: testheap
 testheap: go.* heapfast/*.go
 	go test github.com/raulpy271/heapfast/heapfast
@@ -27,5 +30,4 @@ fmt: wasm/wasm.go internal/*.go heapfast/*.go js/*.js js/test/*.js js/package*.j
 	cd js && npm run fmt
 
 .PHONY: build
-build: js/main.wasm
-
+build: js/main.wasm js/dist

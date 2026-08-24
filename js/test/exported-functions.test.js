@@ -1,6 +1,6 @@
 import assert from "node:assert";
 
-import heapfast from "../heapfast.js";
+import heapfast from "../dist/main.js";
 
 describe("HeapsortExported", function () {
   it("Should sort integer array", function () {
