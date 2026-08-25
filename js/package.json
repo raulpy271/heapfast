@@ -1,10 +1,12 @@
 {
   "name": "heapfast",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "HeapSort and Priority Queues compiled to WASM",
   "type": "module",
   "files": [
-      "dist"
+    "dist",
+    "../LICENSE",
+    "../README.md"
   ],
   "exports": {
     ".": "./dist/main.js"
@@ -12,7 +14,7 @@
   "scripts": {
     "test": "mocha --require test/fixtures.js",
     "fmt": "prettier . --write",
-    "build": "webpack --config webpack.config.js"
+    "build": "webpack --config webpack.config.js --target node"
   },
   "repository": {
     "type": "git",

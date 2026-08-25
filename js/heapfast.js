@@ -146,12 +146,12 @@ export class PriorityQueue {
   add(key, value) {
     let id;
     if (this.freeHead && this.valuesFree > 0) {
-        id = this.freeHead;
-        this.freeHead = this.values[this.freeHead];
-        this.values[id] = value;
-        this.valuesFree--;
+      id = this.freeHead;
+      this.freeHead = this.values[this.freeHead];
+      this.values[id] = value;
+      this.valuesFree--;
     } else {
-        id = this.values.push(value) - 1;
+      id = this.values.push(value) - 1;
     }
     this.queue.add(key, id);
   }

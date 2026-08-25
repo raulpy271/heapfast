@@ -20,7 +20,7 @@ export default {
     path: path.resolve(__dirname, "dist"),
     module: true,
     library: {
-      type: "module"
-    }
+      type: "module",
+    },
   },
 };
