@@ -79,7 +79,7 @@ func main() {
 	heapsFloat := make([]heapfast.Heap[float64, int64], 0, 20)
 	heapsIntZero := make([]heapfast.Heap[int64, heapfast.Zero], 0, 20)
 	heapsFloatZero := make([]heapfast.Heap[float64, heapfast.Zero], 0, 20)
-	js.Global().Set("NewHeapMaxInt", js.FuncOf(func(this js.Value, args []js.Value) any {
+	js.Global().Set("NewHeapMaxIntKV", js.FuncOf(func(this js.Value, args []js.Value) any {
 		h := heapfast.HeapMax[int64, int64]{}
 		heapsInt = append(heapsInt, &h)
 		pos := len(heapsInt) - 1
@@ -88,7 +88,7 @@ func main() {
 		addMethods(heapsInt, heapref)
 		return heapref
 	}))
-	js.Global().Set("NewHeapMinInt", js.FuncOf(func(this js.Value, args []js.Value) any {
+	js.Global().Set("NewHeapMinIntKV", js.FuncOf(func(this js.Value, args []js.Value) any {
 		h := heapfast.HeapMin[int64, int64]{}
 		heapsInt = append(heapsInt, &h)
 		pos := len(heapsInt) - 1
@@ -97,7 +97,7 @@ func main() {
 		addMethods(heapsInt, heapref)
 		return heapref
 	}))
-	js.Global().Set("NewHeapMaxFloat", js.FuncOf(func(this js.Value, args []js.Value) any {
+	js.Global().Set("NewHeapMaxFloatKV", js.FuncOf(func(this js.Value, args []js.Value) any {
 		h := heapfast.HeapMax[float64, int64]{}
 		heapsFloat = append(heapsFloat, &h)
 		pos := len(heapsFloat) - 1
@@ -106,7 +106,7 @@ func main() {
 		addMethods(heapsFloat, heapref)
 		return heapref
 	}))
-	js.Global().Set("NewHeapMinFloat", js.FuncOf(func(this js.Value, args []js.Value) any {
+	js.Global().Set("NewHeapMinFloatKV", js.FuncOf(func(this js.Value, args []js.Value) any {
 		h := heapfast.HeapMin[float64, int64]{}
 		heapsFloat = append(heapsFloat, &h)
 		pos := len(heapsFloat) - 1
@@ -115,7 +115,7 @@ func main() {
 		addMethods(heapsFloat, heapref)
 		return heapref
 	}))
-	js.Global().Set("NewHeapMaxIntZero", js.FuncOf(func(this js.Value, args []js.Value) any {
+	js.Global().Set("NewHeapMaxIntK", js.FuncOf(func(this js.Value, args []js.Value) any {
 		h := heapfast.HeapMax[int64, heapfast.Zero]{}
 		heapsIntZero = append(heapsIntZero, &h)
 		pos := len(heapsIntZero) - 1
@@ -124,7 +124,7 @@ func main() {
 		addMethodsZero(heapsIntZero, heapref)
 		return heapref
 	}))
-	js.Global().Set("NewHeapMinIntZero", js.FuncOf(func(this js.Value, args []js.Value) any {
+	js.Global().Set("NewHeapMinIntK", js.FuncOf(func(this js.Value, args []js.Value) any {
 		h := heapfast.HeapMin[int64, heapfast.Zero]{}
 		heapsIntZero = append(heapsIntZero, &h)
 		pos := len(heapsIntZero) - 1
@@ -133,7 +133,7 @@ func main() {
 		addMethodsZero(heapsIntZero, heapref)
 		return heapref
 	}))
-	js.Global().Set("NewHeapMaxFloatZero", js.FuncOf(func(this js.Value, args []js.Value) any {
+	js.Global().Set("NewHeapMaxFloatK", js.FuncOf(func(this js.Value, args []js.Value) any {
 		h := heapfast.HeapMax[float64, heapfast.Zero]{}
 		heapsFloatZero = append(heapsFloatZero, &h)
 		pos := len(heapsFloatZero) - 1
@@ -142,7 +142,7 @@ func main() {
 		addMethodsZero(heapsFloatZero, heapref)
 		return heapref
 	}))
-	js.Global().Set("NewHeapMinFloatZero", js.FuncOf(func(this js.Value, args []js.Value) any {
+	js.Global().Set("NewHeapMinFloatK", js.FuncOf(func(this js.Value, args []js.Value) any {
 		h := heapfast.HeapMin[float64, heapfast.Zero]{}
 		heapsFloatZero = append(heapsFloatZero, &h)
 		pos := len(heapsFloatZero) - 1

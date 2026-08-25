@@ -1,5 +1,4 @@
-import fs from "fs";
-import path from "path";
+import source wasmModule from "./main.wasm";
 import "./wasm_exec.js";
 
 const TYPE_INT = 0;
@@ -7,21 +6,18 @@ const TYPE_FLOAT = 1;
 export const ASC = 0;
 export const DESC = 1;
 
-function createInstance(imports) {
-  const p = path.join(path.resolve(), "main.wasm");
-  const bytes = fs.readFileSync(p);
-  const wasmModule = new WebAssembly.Module(bytes);
-  return new WebAssembly.Instance(wasmModule, imports);
-}
+var wasmInstance;
 
 export async function startWasmModule(go) {
   if (!go) {
     go = new Go();
   }
-  const instance = createInstance(go.importObject);
-  const exitCode = await go.run(instance);
-  if (exitCode) {
-    throw new Error(`Error when running the main wasm function: $exitCode`);
+  if (!wasmInstance) {
+    wasmInstance = new WebAssembly.Instance(wasmModule, go.importObject);
+    const exitCode = await go.run(wasmInstance);
+    if (exitCode) {
+      throw new Error(`Error when running the main wasm function: $exitCode`);
+    }
   }
   return go;
 }
@@ -46,7 +42,30 @@ function heapsortWasm(buffer, orderby, type, withValues) {
   return globalThis[funcname](buffer);
 }
 
+function priorityQueueWasm(orderby, type, withValues) {
+  let funcname = "NewHeap";
+  if (orderby === DESC) {
+    funcname += "Max";
+  } else {
+    funcname += "Min";
+  }
+  if (type === TYPE_FLOAT) {
+    funcname += "Float";
+  } else {
+    funcname += "Int";
+  }
+  if (withValues) {
+    funcname += "KV";
+  } else {
+    funcname += "K";
+  }
+  return globalThis[funcname]();
+}
+
 export function heapsort(array, orderby, key) {
+  if (!wasmInstance) {
+    startWasmModule();
+  }
   if (array instanceof BigInt64Array) {
     return heapsortWasm(new Uint8Array(array.buffer), orderby, TYPE_INT, false);
   }
@@ -111,9 +130,46 @@ export function heapsort(array, orderby, key) {
   );
 }
 
+export class PriorityQueue {
+  constructor(orderby) {
+    if (orderby === DESC) {
+      this.orderby = DESC;
+    } else {
+      this.orderby = ASC;
+    }
+    this.values = [];
+    this.freeHead = undefined;
+    this.queue = priorityQueueWasm(this.orderby, TYPE_FLOAT, true);
+    this.valuesFree = 0;
+  }
+
+  add(key, value) {
+    let id;
+    if (this.freeHead && this.valuesFree > 0) {
+        id = this.freeHead;
+        this.freeHead = this.values[this.freeHead];
+        this.values[id] = value;
+        this.valuesFree--;
+    } else {
+        id = this.values.push(value) - 1;
+    }
+    this.queue.add(key, id);
+  }
+
+  pop() {
+    const [key, id] = this.queue.pop();
+    const value = this.values[id];
+    this.values[id] = this.freeHead;
+    this.freeHead = id;
+    this.valuesFree++;
+    return [key, value];
+  }
+}
+
 export default {
   startWasmModule,
   heapsort,
   ASC,
   DESC,
+  PriorityQueue,
 };
