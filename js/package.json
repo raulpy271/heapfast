@@ -1,24 +1,36 @@
 {
   "name": "heapfast",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "HeapSort and Priority Queues compiled to WASM",
   "type": "module",
+  "main": "./dist/main.cjs",
+  "module": "./dist/main.js",
+  "browser": "./dist/main.browser.js",
+  "types": "./dist/main.d.ts",
   "files": [
     "dist",
-    "../LICENSE",
-    "../README.md"
+    "LICENSE",
+    "README.md"
   ],
   "exports": {
     ".": {
       "types": "./dist/main.d.ts",
-      "default": "./dist/main.js"
+      "browser": "./dist/main.browser.js",
+      "node": {
+        "import": "./dist/main.js",
+        "require": "./dist/main.cjs"
+      },
+      "import": "./dist/main.js",
+      "require": "./dist/main.cjs",
+      "default": "./dist/main.browser.js"
     }
   },
-  "types": "./dist/main.d.ts",
   "scripts": {
     "test": "mocha --require test/fixtures.js",
     "fmt": "prettier . --write",
-    "build": "webpack --config webpack.config.js && cp heapfast.d.ts dist/main.d.ts"
+    "build": "webpack --config webpack.config.js && cp heapfast.d.ts dist/main.d.ts",
+    "prepack": "cp ../LICENSE ./LICENSE && cp ../README.md ./README.md",
+    "postpack": "rm -f ./LICENSE ./README.md"
   },
   "repository": {
     "type": "git",
