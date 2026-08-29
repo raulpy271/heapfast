@@ -9,12 +9,16 @@
     "../README.md"
   ],
   "exports": {
-    ".": "./dist/main.js"
+    ".": {
+      "types": "./dist/main.d.ts",
+      "default": "./dist/main.js"
+    }
   },
+  "types": "./dist/main.d.ts",
   "scripts": {
     "test": "mocha --require test/fixtures.js",
     "fmt": "prettier . --write",
-    "build": "webpack --config webpack.config.js --target node"
+    "build": "webpack --config webpack.config.js && cp heapfast.d.ts dist/main.d.ts"
   },
   "repository": {
     "type": "git",

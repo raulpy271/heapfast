@@ -10,6 +10,7 @@ const __dirname = path.dirname(__filename);
 export default {
   mode: "development",
   entry: "./heapfast.js",
+  target: ["web", "node"],
   experiments: {
     outputModule: true,
     asyncWebAssembly: true,
