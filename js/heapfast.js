@@ -1,4 +1,4 @@
-import source wasmModule from "./main.wasm";
+import { loadWasmModule } from "./wasm-loader.js";
 import "./wasm_exec.js";
 
 const TYPE_INT = 0;
@@ -8,16 +8,15 @@ export const DESC = 1;
 
 var wasmInstance;
 
-export async function startWasmModule(go) {
+const wasmModule = await loadWasmModule();
+
+export function startWasmModule(go) {
   if (!go) {
     go = new Go();
   }
   if (!wasmInstance) {
     wasmInstance = new WebAssembly.Instance(wasmModule, go.importObject);
-    const exitCode = await go.run(wasmInstance);
-    if (exitCode) {
-      throw new Error(`Error when running the main wasm function: $exitCode`);
-    }
+    go.run(wasmInstance);
   }
   return go;
 }

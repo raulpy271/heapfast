@@ -1,6 +1,6 @@
 {
   "name": "heapfast",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "HeapSort and Priority Queues compiled to WASM",
   "type": "module",
   "main": "./dist/main.cjs",
@@ -26,9 +26,10 @@
     }
   },
   "scripts": {
+    "pretest": "npm run build",
     "test": "mocha --require test/fixtures.js",
     "fmt": "prettier . --write",
-    "build": "webpack --config webpack.config.js && cp heapfast.d.ts dist/main.d.ts",
+    "build": "webpack --config webpack.config.js && cp heapfast.d.ts dist/main.d.ts && cp wasm-loader.browser.js dist/wasm-loader.js && cp main.wasm dist/main.wasm",
     "prepack": "cp ../LICENSE ./LICENSE && cp ../README.md ./README.md",
     "postpack": "rm -f ./LICENSE ./README.md"
   },
