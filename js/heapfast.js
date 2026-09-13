@@ -130,38 +130,47 @@ export function heapsort(array, orderby, key) {
 }
 
 export class PriorityQueue {
-  constructor(orderby) {
+  constructor(orderby, noValues) {
     if (orderby === DESC) {
       this.orderby = DESC;
     } else {
       this.orderby = ASC;
     }
+    this.noValues = !!noValues;
     this.values = [];
     this.freeHead = undefined;
-    this.queue = priorityQueueWasm(this.orderby, TYPE_FLOAT, true);
+    this.queue = priorityQueueWasm(this.orderby, TYPE_FLOAT, !noValues);
     this.valuesFree = 0;
   }
 
   add(key, value) {
     let id;
-    if (this.freeHead && this.valuesFree > 0) {
-      id = this.freeHead;
-      this.freeHead = this.values[this.freeHead];
-      this.values[id] = value;
-      this.valuesFree--;
+    if (value === undefined) {
+      id = 0;
     } else {
-      id = this.values.push(value) - 1;
+      if (this.freeHead && this.valuesFree > 0) {
+        id = this.freeHead;
+        this.freeHead = this.values[this.freeHead];
+        this.values[id] = value;
+        this.valuesFree--;
+      } else {
+        id = this.values.push(value) - 1;
+      }
     }
     this.queue.add(key, id);
   }
 
   pop() {
-    const [key, id] = this.queue.pop();
-    const value = this.values[id];
-    this.values[id] = this.freeHead;
-    this.freeHead = id;
-    this.valuesFree++;
-    return [key, value];
+    const keyid = this.queue.pop();
+    if (this.noValues) {
+      return keyid;
+    } else {
+      const value = this.values[keyid[1]];
+      this.values[keyid[1]] = this.freeHead;
+      this.freeHead = keyid[1];
+      this.valuesFree++;
+      return [keyid[0], value];
+    }
   }
 }
 

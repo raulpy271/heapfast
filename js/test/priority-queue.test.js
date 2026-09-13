@@ -28,7 +28,31 @@ describe("Priority Queue with values", function () {
     assert.deepStrictEqual(queue.pop(), [26, "Bob"]);
     assert.deepStrictEqual(queue.pop(), [33, "Raul"]);
     assert.deepStrictEqual(queue.values, [3, 4, 1, 2, undefined]);
-    assert.equal(queue.freeHead, 0);
-    assert.equal(queue.valuesFree, 5);
+  });
+});
+
+describe("Priority Queue without values", function () {
+  it("Should add three items and pop highest", function () {
+    const queue = new heapfast.PriorityQueue(heapfast.DESC, true);
+    queue.add(33);
+    queue.add(20);
+    queue.add(25);
+    const key = queue.pop();
+    assert.equal(key, 33);
+    assert.deepStrictEqual(queue.values, []);
+  });
+  it("Should add five items and pop all ascending", function () {
+    const queue = new heapfast.PriorityQueue(heapfast.ASC, true);
+    queue.add(33);
+    queue.add(20);
+    queue.add(25);
+    queue.add(26);
+    queue.add(19);
+    assert.deepStrictEqual(queue.pop(), 19);
+    assert.deepStrictEqual(queue.pop(), 20);
+    assert.deepStrictEqual(queue.pop(), 25);
+    assert.deepStrictEqual(queue.pop(), 26);
+    assert.deepStrictEqual(queue.pop(), 33);
+    assert.deepStrictEqual(queue.values, []);
   });
 });

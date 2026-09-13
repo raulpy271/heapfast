@@ -37,7 +37,13 @@ export function startWasmModule(go?: Go): Promise<Go>;
  * Returns the number of sorted elements.
  */
 export function heapsort(
-  array: BigInt64Array | Float64Array | Int32Array | Float32Array | Uint32Array | number[],
+  array:
+    | BigInt64Array
+    | Float64Array
+    | Int32Array
+    | Float32Array
+    | Uint32Array
+    | number[],
   orderby?: OrderBy,
 ): number;
 /**
@@ -54,11 +60,15 @@ export function heapsort<T>(
 /**
  * A priority queue backed by a WASM binary min/max heap. Keys are
  * numbers; values may be any JS value and are kept on the JS side.
+ * Set `noValues` to `true` to store keys only.
  */
-export class PriorityQueue<V = unknown> {
-  constructor(orderby?: OrderBy);
-  add(key: number, value: V): void;
-  pop(): [number, V];
+export class PriorityQueue<V = unknown, NoValues extends boolean = false> {
+  constructor(orderby?: OrderBy, noValues?: NoValues);
+  add(
+    key: number,
+    ...value: NoValues extends true ? [] : [value: V]
+  ): void;
+  pop(): NoValues extends true ? number : [number, V];
 }
 
 declare const heapfast: {
