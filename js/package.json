@@ -1,6 +1,6 @@
 {
   "name": "heapfast",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "HeapSort and Priority Queues compiled to WASM",
   "type": "module",
   "main": "./dist/main.cjs",

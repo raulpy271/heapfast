@@ -64,10 +64,7 @@ export function heapsort<T>(
  */
 export class PriorityQueue<V = unknown, NoValues extends boolean = false> {
   constructor(orderby?: OrderBy, noValues?: NoValues);
-  add(
-    key: number,
-    ...value: NoValues extends true ? [] : [value: V]
-  ): void;
+  add(key: number, ...value: NoValues extends true ? [] : [value: V]): void;
   pop(): NoValues extends true ? number : [number, V];
 }
 

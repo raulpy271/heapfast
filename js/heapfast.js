@@ -131,6 +131,9 @@ export function heapsort(array, orderby, key) {
 
 export class PriorityQueue {
   constructor(orderby, noValues) {
+    if (!wasmInstance) {
+      startWasmModule();
+    }
     if (orderby === DESC) {
       this.orderby = DESC;
     } else {

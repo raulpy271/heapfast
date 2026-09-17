@@ -58,6 +58,38 @@ heapfast.heapsort(persons, heapfast.ASC, "age");
 
 As we said, the third parameter can be a function, so in the last example if we pass the arrow function `(person) => person.age` we would get the same result.
 
+### Priority Queue
+
+The exported `PriorityQueue` class allow the client to store a priority queue with values associated to the keys:
+
+```js
+import heapfast from "heapfast";
+
+const queue = new heapfast.PriorityQueue(heapfast.ASC)
+
+queue.add(0, "Raul");
+queue.add(5, "Ralph");
+queue.add(10, "Raupy");
+
+console.log(queue.pop());
+// [ 0, 'Raul' ]
+```
+
+It's possible to create a priority queue that stores only keys, to do that that second argument `noValues` should be true:
+
+```js
+import heapfast from "heapfast";
+
+const keys = new heapfast.PriorityQueue(heapfast.DESC, true)
+
+keys.add(10342.23)
+keys.add(142.23)
+keys.add(542.23)
+
+console.log(keys.pop())
+// 10342.23
+```
+
 ## :envelope: License
 
 Released under the MIT License. See [LICENSE.md](/LICENSE) for details.
