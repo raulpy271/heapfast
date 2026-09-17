@@ -16,6 +16,8 @@ npm install heapfast
 
 :golf: The package was built to diverse JS environments; you can import it using ES Modules, CommonJS Modules, TypeScript and React with Webpack.
 
+> The package uses a top-level await to load the WASM module. So if you're using `require` to import the package be aware that `require` will return a promise to the package, see an usage example at [CommonJS Usage](#commonjs-usage).
+
 ## :children_crossing: Usage example
 
 ### Sorting an array of numbers
@@ -90,6 +92,24 @@ keys.add(542.23)
 
 console.log(keys.pop())
 // 10342.23
+```
+
+### CommonJS Usage
+
+The CommonJS import syntax uses the function `require`, as the package has a top-lavel await, the import returns a promise to the package then it's needed to handle the promise using a async function:
+
+```js
+var heapfast;
+// when the promise resolves the `heapfast` variable will have the package.
+(async () => {
+    heapfast = await require('heapfast');
+})();
+```
+
+In some scenarios it possible to use a top-level await, the syntax is more concise:
+
+```js
+const heapfast = await require('heapfast');
 ```
 
 ## :envelope: License
