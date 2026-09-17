@@ -75,7 +75,7 @@ console.log(queue.pop());
 // [ 0, 'Raul' ]
 ```
 
-It's possible to create a priority queue that stores only keys, to do that that second argument `noValues` should be true:
+It's possible to create a priority queue that stores only keys, to do this, the second argument `noValues` should be true:
 
 ```js
 import heapfast from "heapfast";
