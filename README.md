@@ -14,6 +14,8 @@ To install and import the package, is simple as any other nodejs library:
 npm install heapfast
 ```
 
+:golf: The package was built to diverse JS environments; you can import it using ES Modules, CommonJS Modules, TypeScript and React with Webpack.
+
 ## :children_crossing: Usage example
 
 ### Sorting an array of numbers
